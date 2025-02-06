@@ -2,12 +2,28 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const gridSize = 20;
-const tileCount = canvas.width / gridSize;
+const tileCount = 20; // 20x20 grid
+canvas.width = gridSize * tileCount;
+canvas.height = gridSize * tileCount;
 
 let snake = [{ x: 10, y: 10 }];
 let direction = { x: 0, y: 0 };
 let food = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
 let score = 0;
+let highScore = localStorage.getItem("highScore") || 0;
+
+const currentScoreElement = document.getElementById("currentScore");
+const highScoreElement = document.getElementById("highScore");
+
+// تحميل الصور
+const snakeHeadImg = new Image();
+snakeHeadImg.src = "https://via.placeholder.com/20x20/00ff00/000000?text=🐍";
+
+const snakeBodyImg = new Image();
+snakeBodyImg.src = "https://via.placeholder.com/20x20/00cc00/000000?text=🟢";
+
+const foodImg = new Image();
+foodImg.src = "https://via.placeholder.com/20x20/ff0000/000000?text=🍎";
 
 // الحصول على الأزرار
 const upButton = document.getElementById("upButton");
@@ -41,7 +57,13 @@ function gameLoop() {
 function update() {
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
 
-    if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount || collision(head, snake)) {
+    // تجاوز الجدران
+    if (head.x < 0) head.x = tileCount - 1;
+    if (head.x >= tileCount) head.x = 0;
+    if (head.y < 0) head.y = tileCount - 1;
+    if (head.y >= tileCount) head.y = 0;
+
+    if (collision(head, snake)) {
         resetGame();
         return;
     }
@@ -50,28 +72,38 @@ function update() {
 
     if (head.x === food.x && head.y === food.y) {
         score++;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem("highScore", highScore);
+        }
         food = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
     } else {
         snake.pop();
     }
+
+    currentScoreElement.textContent = `النقاط: ${score}`;
+    highScoreElement.textContent = `أعلى نقاط: ${highScore}`;
 }
 
 function draw() {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "lime";
-    snake.forEach(segment => ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize));
+    // رسم الثعبان
+    snake.forEach((segment, index) => {
+        if (index === 0) {
+            ctx.drawImage(snakeHeadImg, segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        } else {
+            ctx.drawImage(snakeBodyImg, segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        }
+    });
 
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
-
-    ctx.fillStyle = "white";
-    ctx.fillText(`النقاط: ${score}`, 10, 20);
+    // رسم الفاكهة
+    ctx.drawImage(foodImg, food.x * gridSize, food.y * gridSize, gridSize, gridSize);
 }
 
 function collision(head, array) {
-    return array.some(segment => segment.x === head.x && segment.y === head.y);
+    return array.slice(1).some(segment => segment.x === head.x && segment.y === head.y);
 }
 
 function resetGame() {
