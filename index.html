@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الثعبان</title>
+    <title>لعبة الثعبان المتطورة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="game-container">
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div class="score-container">
+            <span id="currentScore">النقاط: 0</span>
+            <span id="highScore">أعلى نقاط: 0</span>
+        </div>
+        <canvas id="gameCanvas"></canvas>
         <div class="controls">
             <button id="upButton"><i class="fas fa-arrow-up"></i></button>
             <button id="leftButton"><i class="fas fa-arrow-left"></i></button>
