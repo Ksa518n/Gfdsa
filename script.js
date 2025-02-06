@@ -9,6 +9,29 @@ let direction = { x: 0, y: 0 };
 let food = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
 let score = 0;
 
+// الحصول على الأزرار
+const upButton = document.getElementById("upButton");
+const leftButton = document.getElementById("leftButton");
+const downButton = document.getElementById("downButton");
+const rightButton = document.getElementById("rightButton");
+
+// إضافة مستمعين للأحداث
+upButton.addEventListener("click", () => {
+    if (direction.y === 0) direction = { x: 0, y: -1 };
+});
+
+leftButton.addEventListener("click", () => {
+    if (direction.x === 0) direction = { x: -1, y: 0 };
+});
+
+downButton.addEventListener("click", () => {
+    if (direction.y === 0) direction = { x: 0, y: 1 };
+});
+
+rightButton.addEventListener("click", () => {
+    if (direction.x === 0) direction = { x: 1, y: 0 };
+});
+
 function gameLoop() {
     update();
     draw();
