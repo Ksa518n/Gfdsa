@@ -17,3 +17,43 @@ body {
 canvas {
     border: 1px solid white;
 }
+
+.controls {
+    margin-top: 20px;
+    display: grid;
+    grid-template-areas:
+        ". up ."
+        "left down right";
+    gap: 10px;
+    justify-content: center;
+}
+
+button {
+    font-size: 24px;
+    padding: 15px;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+#upButton {
+    grid-area: up;
+}
+
+#leftButton {
+    grid-area: left;
+}
+
+#downButton {
+    grid-area: down;
+}
+
+#rightButton {
+    grid-area: right;
+}
