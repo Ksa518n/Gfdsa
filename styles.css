@@ -5,17 +5,32 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: black;
+    background-color: #1a1a1a;
     color: white;
     font-family: Arial, sans-serif;
 }
 
 .game-container {
     text-align: center;
+    width: 100%;
+    max-width: 400px;
 }
 
 canvas {
-    border: 1px solid white;
+    border: 2px solid #333;
+    background-color: #000;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #ffcc00;
 }
 
 .controls {
