@@ -1,39 +1,43 @@
-const gameBoard = document.getElementById("game-board");
-const scoreElement = document.getElementById("score");
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const scoreDisplay = document.getElementById('score');
+const highScoreDisplay = document.getElementById('highScore');
+const restartBtn = document.getElementById('restartBtn');
 
-// إعداد اللعبة
-const gridSize = 20;
-let snake = [{ x: 10, y: 10 }];
-let food = { x: 5, y: 5 };
-let direction = { x: 0, y: 0 };
+canvas.width = 400;
+canvas.height = 400;
+
+let snake = [{ x: 200, y: 200 }];
+let food = { x: 0, y: 0 };
+let direction = { x: 20, y: 0 };
 let score = 0;
+let highScore = localStorage.getItem('highScore') || 0;
+let gameInterval;
 
-// رسم الثعبان والطعام
-function draw() {
-    gameBoard.innerHTML = "";
-    snake.forEach(segment => {
-        const snakeElement = document.createElement("div");
-        snakeElement.style.gridRowStart = segment.y;
-        snakeElement.style.gridColumnStart = segment.x;
-        snakeElement.classList.add("snake");
-        gameBoard.appendChild(snakeElement);
-    });
+highScoreDisplay.textContent = highScore;
 
-    const foodElement = document.createElement("div");
-    foodElement.style.gridRowStart = food.y;
-    foodElement.style.gridColumnStart = food.x;
-    foodElement.classList.add("food");
-    gameBoard.appendChild(foodElement);
+function startGame() {
+    snake = [{ x: 200, y: 200 }];
+    direction = { x: 20, y: 0 };
+    score = 0;
+    scoreDisplay.textContent = score;
+    generateFood();
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(updateGame, 150);
 }
 
-// تحريك الثعبان
-function move() {
+function generateFood() {
+    food.x = Math.floor(Math.random() * (canvas.width / 20)) * 20;
+    food.y = Math.floor(Math.random() * (canvas.height / 20)) * 20;
+}
+
+function updateGame() {
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
 
-    // التحقق من الاصطدام بالجدران أو الجسم
-    if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-        alert("Game Over! النقاط: " + score);
-        resetGame();
+    // التحقق من الاصطدام بالجدار أو النفس
+    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        clearInterval(gameInterval);
+        alert('انتهت اللعبة! اضغط على إعادة تشغيل.');
         return;
     }
 
@@ -41,37 +45,53 @@ function move() {
 
     // التحقق من أكل الطعام
     if (head.x === food.x && head.y === food.y) {
-        score++;
-        scoreElement.textContent = score;
+        score += 10;
+        scoreDisplay.textContent = score;
+        if (score > highScore) {
+            highScore = score;
+            highScoreDisplay.textContent = highScore;
+            localStorage.setItem('highScore', highScore);
+        }
         generateFood();
     } else {
         snake.pop();
     }
+
+    drawGame();
 }
 
-// توليد الطعام في مكان عشوائي
-function generateFood() {
-    food.x = Math.floor(Math.random() * gridSize) + 1;
-    food.y = Math.floor(Math.random() * gridSize) + 1;
+function drawGame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // رسم الطعام
+    ctx.fillStyle = 'red';
+    ctx.fillRect(food.x, food.y, 20, 20);
+
+    // رسم الثعبان
+    ctx.fillStyle = 'green';
+    snake.forEach(segment => ctx.fillRect(segment.x, segment.y, 20, 20));
 }
 
-// إعادة تعيين اللعبة
-function resetGame() {
-    snake = [{ x: 10, y: 10 }];
-    direction = { x: 0, y: 0 };
-    score = 0;
-    scoreElement.textContent = score;
-    generateFood();
-}
+// التحكم في حركة الثعبان
+document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+        case 'ArrowUp':
+            if (direction.y === 0) direction = { x: 0, y: -20 };
+            break;
+        case 'ArrowDown':
+            if (direction.y === 0) direction = { x: 0, y: 20 };
+            break;
+        case 'ArrowLeft':
+            if (direction.x === 0) direction = { x: -20, y: 0 };
+            break;
+        case 'ArrowRight':
+            if (direction.x === 0) direction = { x: 20, y: 0 };
+            break;
+    }
+});
 
-// التحكم في الثعبان باستخدام الأزرار
-document.getElementById("up").addEventListener("click", () => direction = { x: 0, y: -1 });
-document.getElementById("left").addEventListener("click", () => direction = { x: -1, y: 0 });
-document.getElementById("down").addEventListener("click", () => direction = { x: 0, y: 1 });
-document.getElementById("right").addEventListener("click", () => direction = { x: 1, y: 0 });
+// زر إعادة التشغيل
+restartBtn.addEventListener('click', startGame);
 
-// تحديث اللعبة كل 200 مللي ثانية
-setInterval(() => {
-    move();
-    draw();
-}, 200);
+// بدء اللعبة
+startGame();
