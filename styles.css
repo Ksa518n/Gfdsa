@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Tajawal', sans-serif;
 }
 
 body {
@@ -16,38 +16,54 @@ body {
 
 .game-container {
     text-align: center;
-    background: #ecf0f1;
+    background: #f8f9fa;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
 }
 
 h1 {
     margin-bottom: 20px;
     color: #2c3e50;
+    font-size: 2em;
 }
 
 canvas {
-    background-color: #000;
-    border: 3px solid #2c3e50;
-    border-radius: 10px;
+    background-color: #dfe6e9;
+    border: 5px solid #2c3e50;
+    border-radius: 15px;
+    margin-bottom: 20px;
 }
 
 .scoreboard {
     margin: 15px 0;
-    font-size: 18px;
+    font-size: 20px;
+    color: #2c3e50;
 }
 
-#restartBtn {
-    padding: 10px 20px;
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+button {
+    padding: 12px 25px;
     background-color: #27ae60;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    transition: background 0.3s, transform 0.2s;
 }
 
-#restartBtn:hover {
+button:hover {
     background-color: #2ecc71;
+    transform: scale(1.1);
+}
+
+button:active {
+    background-color: #1e8449;
+    transform: scale(0.95);
 }
