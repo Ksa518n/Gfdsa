@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الثعبان</title>
+    <title>لعبة الثعبان - أبو نادر</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>لعبة الثعبان</h1>
-        <div id="game-board"></div>
-        <div class="score">النقاط: <span id="score">0</span></div>
-        <div class="controls">
-            <button id="up">⬆️</button>
-            <button id="left">⬅️</button>
-            <button id="down">⬇️</button>
-            <button id="right">➡️</button>
+    <div class="game-container">
+        <h1>لعبة الثعبان - أبو نادر</h1>
+        <canvas id="gameCanvas"></canvas>
+        <div class="scoreboard">
+            <p>النقاط: <span id="score">0</span></p>
+            <p>أعلى نقاط: <span id="highScore">0</span></p>
         </div>
+        <button id="restartBtn">إعادة تشغيل</button>
     </div>
     <script src="script.js"></script>
 </body>
