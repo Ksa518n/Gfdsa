@@ -3,22 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الثعبان المتطورة</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <title>لعبة الثعبان</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <div class="score-container">
-            <span id="currentScore">النقاط: 0</span>
-            <span id="highScore">أعلى نقاط: 0</span>
-        </div>
-        <canvas id="gameCanvas"></canvas>
+    <div class="container">
+        <h1>لعبة الثعبان</h1>
+        <div id="game-board"></div>
+        <div class="score">النقاط: <span id="score">0</span></div>
         <div class="controls">
-            <button id="upButton"><i class="fas fa-arrow-up"></i></button>
-            <button id="leftButton"><i class="fas fa-arrow-left"></i></button>
-            <button id="downButton"><i class="fas fa-arrow-down"></i></button>
-            <button id="rightButton"><i class="fas fa-arrow-right"></i></button>
+            <button id="up">⬆️</button>
+            <button id="left">⬅️</button>
+            <button id="down">⬇️</button>
+            <button id="right">➡️</button>
         </div>
     </div>
     <script src="script.js"></script>
