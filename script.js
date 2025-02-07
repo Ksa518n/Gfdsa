@@ -1,132 +1,77 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const gameBoard = document.getElementById("game-board");
+const scoreElement = document.getElementById("score");
 
+// إعداد اللعبة
 const gridSize = 20;
-const tileCount = 20; // 20x20 grid
-canvas.width = gridSize * tileCount;
-canvas.height = gridSize * tileCount;
-
 let snake = [{ x: 10, y: 10 }];
+let food = { x: 5, y: 5 };
 let direction = { x: 0, y: 0 };
-let food = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
 let score = 0;
-let highScore = localStorage.getItem("highScore") || 0;
 
-const currentScoreElement = document.getElementById("currentScore");
-const highScoreElement = document.getElementById("highScore");
+// رسم الثعبان والطعام
+function draw() {
+    gameBoard.innerHTML = "";
+    snake.forEach(segment => {
+        const snakeElement = document.createElement("div");
+        snakeElement.style.gridRowStart = segment.y;
+        snakeElement.style.gridColumnStart = segment.x;
+        snakeElement.classList.add("snake");
+        gameBoard.appendChild(snakeElement);
+    });
 
-// تحميل الصور
-const snakeHeadImg = new Image();
-snakeHeadImg.src = "https://via.placeholder.com/20x20/00ff00/000000?text=🐍";
-
-const snakeBodyImg = new Image();
-snakeBodyImg.src = "https://via.placeholder.com/20x20/00cc00/000000?text=🟢";
-
-const foodImg = new Image();
-foodImg.src = "https://via.placeholder.com/20x20/ff0000/000000?text=🍎";
-
-// الحصول على الأزرار
-const upButton = document.getElementById("upButton");
-const leftButton = document.getElementById("leftButton");
-const downButton = document.getElementById("downButton");
-const rightButton = document.getElementById("rightButton");
-
-// إضافة مستمعين للأحداث
-upButton.addEventListener("click", () => {
-    if (direction.y === 0) direction = { x: 0, y: -1 };
-});
-
-leftButton.addEventListener("click", () => {
-    if (direction.x === 0) direction = { x: -1, y: 0 };
-});
-
-downButton.addEventListener("click", () => {
-    if (direction.y === 0) direction = { x: 0, y: 1 };
-});
-
-rightButton.addEventListener("click", () => {
-    if (direction.x === 0) direction = { x: 1, y: 0 };
-});
-
-function gameLoop() {
-    update();
-    draw();
-    setTimeout(gameLoop, 100);
+    const foodElement = document.createElement("div");
+    foodElement.style.gridRowStart = food.y;
+    foodElement.style.gridColumnStart = food.x;
+    foodElement.classList.add("food");
+    gameBoard.appendChild(foodElement);
 }
 
-function update() {
+// تحريك الثعبان
+function move() {
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
 
-    // تجاوز الجدران
-    if (head.x < 0) head.x = tileCount - 1;
-    if (head.x >= tileCount) head.x = 0;
-    if (head.y < 0) head.y = tileCount - 1;
-    if (head.y >= tileCount) head.y = 0;
-
-    if (collision(head, snake)) {
+    // التحقق من الاصطدام بالجدران أو الجسم
+    if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        alert("Game Over! النقاط: " + score);
         resetGame();
         return;
     }
 
     snake.unshift(head);
 
+    // التحقق من أكل الطعام
     if (head.x === food.x && head.y === food.y) {
         score++;
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem("highScore", highScore);
-        }
-        food = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
+        scoreElement.textContent = score;
+        generateFood();
     } else {
         snake.pop();
     }
-
-    currentScoreElement.textContent = `النقاط: ${score}`;
-    highScoreElement.textContent = `أعلى نقاط: ${highScore}`;
 }
 
-function draw() {
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // رسم الثعبان
-    snake.forEach((segment, index) => {
-        if (index === 0) {
-            ctx.drawImage(snakeHeadImg, segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
-        } else {
-            ctx.drawImage(snakeBodyImg, segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
-        }
-    });
-
-    // رسم الفاكهة
-    ctx.drawImage(foodImg, food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+// توليد الطعام في مكان عشوائي
+function generateFood() {
+    food.x = Math.floor(Math.random() * gridSize) + 1;
+    food.y = Math.floor(Math.random() * gridSize) + 1;
 }
 
-function collision(head, array) {
-    return array.slice(1).some(segment => segment.x === head.x && segment.y === head.y);
-}
-
+// إعادة تعيين اللعبة
 function resetGame() {
     snake = [{ x: 10, y: 10 }];
     direction = { x: 0, y: 0 };
     score = 0;
+    scoreElement.textContent = score;
+    generateFood();
 }
 
-document.addEventListener("keydown", e => {
-    switch (e.key) {
-        case "ArrowUp":
-            if (direction.y === 0) direction = { x: 0, y: -1 };
-            break;
-        case "ArrowDown":
-            if (direction.y === 0) direction = { x: 0, y: 1 };
-            break;
-        case "ArrowLeft":
-            if (direction.x === 0) direction = { x: -1, y: 0 };
-            break;
-        case "ArrowRight":
-            if (direction.x === 0) direction = { x: 1, y: 0 };
-            break;
-    }
-});
+// التحكم في الثعبان باستخدام الأزرار
+document.getElementById("up").addEventListener("click", () => direction = { x: 0, y: -1 });
+document.getElementById("left").addEventListener("click", () => direction = { x: -1, y: 0 });
+document.getElementById("down").addEventListener("click", () => direction = { x: 0, y: 1 });
+document.getElementById("right").addEventListener("click", () => direction = { x: 1, y: 0 });
 
-gameLoop();
+// تحديث اللعبة كل 200 مللي ثانية
+setInterval(() => {
+    move();
+    draw();
+}, 200);
