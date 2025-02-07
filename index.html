@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الثعبان - أبو نادر</title>
+    <title>لعبة الثعبان - أبو نادر للحلال</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
-        <h1>لعبة الثعبان - أبو نادر</h1>
+        <h1>لعبة الثعبان - أبو نادر للحلال</h1>
         <canvas id="gameCanvas"></canvas>
         <div class="scoreboard">
             <p>النقاط: <span id="score">0</span></p>
-            <p>أعلى نقاط: <span id="highScore">0</span></p>
+            <p>أعلى النقاط: <span id="highScore">0</span></p>
         </div>
-        <button id="restartBtn">إعادة تشغيل</button>
+        <div class="button-container">
+            <button id="startBtn">ابدأ اللعبة</button>
+            <button id="restartBtn" style="display:none;">إعادة تشغيل</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
